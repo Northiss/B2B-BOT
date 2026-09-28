@@ -1,0 +1,18 @@
+# Секреты — НИКОГДА не коммитить
+.env
+*.env
+!.env.example
+service-account*.json
+credentials*.json
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# IDE / ОС
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
