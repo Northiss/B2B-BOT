@@ -1,0 +1,24 @@
+# Render Blueprint: бот работает через long polling, поэтому тип сервиса — worker
+# (не web: у бота нет HTTP-порта). Секреты (sync: false) вводятся в панели Render.
+services:
+  - type: worker
+    name: lead-qualifier-bot
+    runtime: python
+    region: frankfurt
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: MANAGERS_CHAT_ID
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GOOGLE_SHEET_ID
+        sync: false
+      - key: GOOGLE_CREDS_JSON
+        sync: false

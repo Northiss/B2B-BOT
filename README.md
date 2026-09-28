@@ -53,6 +53,27 @@ python bot.py
    3. Создайте таблицу и откройте к ней доступ «Редактор» для `client_email` из JSON-ключа.
    4. ID таблицы (часть URL между `/d/` и `/edit`) → `GOOGLE_SHEET_ID`.
 
+## Деплой на Render
+
+Бот работает через long polling и не слушает HTTP-порт, поэтому в Render это
+**Background Worker** (не Web Service). Параметры лежат в `render.yaml`.
+
+| Параметр | Значение |
+|---|---|
+| Type | Background Worker |
+| Runtime | Python 3 |
+| Region | Frankfurt (или ближайший к вам) |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `python bot.py` |
+| Instance | Starter ($7/мес) или выше — воркер не работает на free-тарифе |
+
+Переменные окружения (раздел Environment): `TELEGRAM_BOT_TOKEN`, `MANAGERS_CHAT_ID`,
+`ANTHROPIC_API_KEY`, `GOOGLE_SHEET_ID`, `GOOGLE_CREDS_JSON` (всё содержимое JSON-ключа),
+`PYTHON_VERSION=3.12.8`.
+
+Запускайте **ровно один экземпляр** бота: два одновременных polling-процесса с одним
+токеном конфликтуют. Не запускайте бота локально, пока он работает на Render.
+
 ## Безопасность
 
 Никогда не коммитьте `.env` и JSON-ключ сервисного аккаунта — они уже

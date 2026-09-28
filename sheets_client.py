@@ -15,14 +15,21 @@ append_lead достаточно заменить на вызов их API — �
 """
 
 import datetime
+import json
 import os
 
 import gspread
 
-CREDS_FILE = os.environ["GOOGLE_SHEETS_CREDS_FILE"]
 SHEET_ID = os.environ["GOOGLE_SHEET_ID"]
 
-_gc = gspread.service_account(filename=CREDS_FILE)
+# Два способа передать ключ сервисного аккаунта:
+#   GOOGLE_CREDS_JSON       — всё содержимое JSON-файла в переменной (удобно для Render/хостингов)
+#   GOOGLE_SHEETS_CREDS_FILE — путь к JSON-файлу (удобно локально)
+if os.environ.get("GOOGLE_CREDS_JSON"):
+    _gc = gspread.service_account_from_dict(json.loads(os.environ["GOOGLE_CREDS_JSON"]))
+else:
+    _gc = gspread.service_account(filename=os.environ["GOOGLE_SHEETS_CREDS_FILE"])
+
 _sheet = _gc.open_by_key(SHEET_ID).sheet1
 
 HEADER = [
